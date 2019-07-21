@@ -30,28 +30,7 @@ public class BusinessIntelligence {
 
     private static final Comparator<Pair<Long, Long>> pairFirstComparator = Comparator.comparing(Pair::first);
     private static final Comparator<Pair<Long, Long>> pairOtherComparator = Comparator.comparing(Pair::other);
-
-    /*
-MATCH (tag:Tag {name: $tag})
-  MATCH (tag)<-[:HAS_TAG]-(message1:Message)-[:HAS_CREATOR]->(person1:Person)
-  MATCH (tag)<-[:HAS_TAG]-(message2:Message)-[:HAS_CREATOR]->(person1)
-  OPTIONAL MATCH (message2)<-[:LIKES]-(person2:Person)
-  OPTIONAL MATCH (person2)<-[:HAS_CREATOR]-(message3:Message)<-[like:LIKES]-(p3:Person)
-  RETURN
-    person1.id,
-    count(DISTINCT like) AS authorityScore
-  ORDER BY
-    authorityScore DESC,
-    person1.id ASC
-  LIMIT 100
-
-  Given a *Tag*, find all *Persons* (`person`) that ever created a *Message* (`message1`) with the given *Tag*.
-
-  For each of these *Persons* (`person`) compute their "authority score" as follows\:
-  * The "authority score" is the sum of "popularity scores" of the *Persons* (`person2`) that liked any of that *Person*'s *Messages* (`message2`)
-    with the given *Tag*.
-  * A *Person*'s (`person2`) "popularity score" is defined as the total number of likes on all of their *Messages* (`message3`).
- */
+    
     @Procedure(name = "com.maxdemarzi.bi.q7", mode = Mode.READ)
     @Description("com.maxdemarzi.bi.q7(String tagName)")
     public Stream<ScoreResult> biq7(@Name(value = "tagName") String tagName) {
